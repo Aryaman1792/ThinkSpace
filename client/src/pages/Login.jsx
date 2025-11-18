@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,21 +29,42 @@ export default function Login() {
     }
   };
 
+  const highlights = [
+    { title: "Daily sparks", description: "Micro-prompts tuned to your interests keep curiosity alive." },
+    { title: "Mood boards", description: "Drag visuals, palettes, and references into a living canvas." },
+    { title: "Sync anywhere", description: "Your thoughts, sketches, and audio snippets travel with you." },
+  ];
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-semibold">Welcome back</h1>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={onChange} className="w-full border p-2 rounded" />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={onChange} className="w-full border p-2 rounded" />
-        <button disabled={loading} className="w-full bg-black text-white py-2 rounded disabled:opacity-60">
-          {loading ? "Signing in..." : "Login"}
+    <AuthLayout
+      heading="Welcome back, creator"
+      subheading="Pick up exactly where you left off. Ideas, reactions, and future plans are synced across every device."
+      asideTitle="Re-enter flow mode"
+      asideDescription="ThinkSpace adapts to your energy—whether you need calm note-taking or bold brainstorming."
+      asideHighlights={highlights}
+    >
+      <form className="auth-form" onSubmit={onSubmit}>
+        {error && <p className="form-error">{error}</p>}
+
+        <div className="input-field">
+          <label htmlFor="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@studio.com" value={form.email} onChange={onChange} autoComplete="email" />
+        </div>
+
+        <div className="input-field">
+          <label htmlFor="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="••••••••" value={form.password} onChange={onChange} autoComplete="current-password" />
+        </div>
+
+        <button disabled={loading} className="primary-btn" type="submit">
+          {loading ? "Opening ThinkSpace..." : "Sign in"}
         </button>
-        <p className="text-sm">
-          New here? <a href="/register" className="text-blue-600">Create an account</a>
+
+        <p className="form-helper">
+          New to ThinkSpace? <Link to="/register">Create an account</Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }
 

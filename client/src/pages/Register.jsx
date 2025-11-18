@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout.jsx";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -27,22 +28,47 @@ export default function Register() {
     }
   };
 
+  const highlights = [
+    { title: "Idea snapshots", description: "Capture sparks with mood boards, audio notes, and timelines." },
+    { title: "Flow states", description: "Guided prompts and focus rituals nudge you past creative blocks." },
+    { title: "Team pulses", description: "Share thought clouds and gather async reactions in one tap." },
+  ];
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-semibold">Create your account</h1>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        <input name="name" placeholder="Name" value={form.name} onChange={onChange} className="w-full border p-2 rounded" />
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={onChange} className="w-full border p-2 rounded" />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={onChange} className="w-full border p-2 rounded" />
-        <button disabled={loading} className="w-full bg-black text-white py-2 rounded disabled:opacity-60">
-          {loading ? "Registering..." : "Register"}
+    <AuthLayout
+      heading="Create your ThinkSpace"
+      subheading="Sign up to organize every idea, inspiration, and breakthrough in one playful workspace."
+      asideTitle="Ideas thrive inside ThinkSpace"
+      asideDescription="A calm canvas for brainstorming, mood boarding, and mapping out fresh concepts."
+      asideHighlights={highlights}
+    >
+      <form className="auth-form" onSubmit={onSubmit}>
+        {error && <p className="form-error">{error}</p>}
+
+        <div className="input-field">
+          <label htmlFor="name">Full name</label>
+          <input id="name" name="name" placeholder="Ava Solis" value={form.name} onChange={onChange} autoComplete="name" />
+        </div>
+
+        <div className="input-field">
+          <label htmlFor="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@studio.com" value={form.email} onChange={onChange} autoComplete="email" />
+        </div>
+
+        <div className="input-field">
+          <label htmlFor="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="••••••••" value={form.password} onChange={onChange} autoComplete="new-password" />
+        </div>
+
+        <button disabled={loading} className="primary-btn" type="submit">
+          {loading ? "Crafting your space..." : "Create account"}
         </button>
-        <p className="text-sm">
-          Already have an account? <a href="/login" className="text-blue-600">Log in</a>
+
+        <p className="form-helper">
+          Already part of ThinkSpace? <Link to="/login">Log in</Link>
         </p>
       </form>
-    </div>
+    </AuthLayout>
   );
 }
 
