@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Dashboard() {
@@ -15,8 +15,39 @@ export default function Dashboard() {
   const [reflectionText, setReflectionText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [reflections, setReflections] = useState([]);
 
   const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000" });
+
+  const formatTimestamp = (timestamp) => {
+    const now = new Date();
+    const reflectionDate = new Date(timestamp);
+    const diffTime = now - reflectionDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return "Today";
+    } else if (diffDays === 1) {
+      return "Yesterday";
+    } else {
+      return reflectionDate.toLocaleDateString();
+    }
+  };
+
+  const fetchReflections = async () => {
+    if (!user?.id) return;
+    
+    try {
+      const response = await api.get(`/api/reflection/${user.id}`);
+      setReflections(response.data.reflections || []);
+    } catch (error) {
+      console.error("Error fetching reflections:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReflections();
+  }, []);
 
   const handleSaveReflection = async () => {
     if (!reflectionText.trim()) {
@@ -34,6 +65,8 @@ export default function Dashboard() {
 
       setSuccessMessage("Reflection saved!");
       setReflectionText("");
+      // Refresh the reflections list
+      await fetchReflections();
     } catch (error) {
       console.error("Error saving reflection:", error);
     } finally {
@@ -158,6 +191,24 @@ export default function Dashboard() {
           >
             {isLoading ? "Saving..." : "Save reflection"}
           </button>
+          
+          {reflections.length > 0 && (
+            <div className="reflections-list">
+              <h4>Previous reflections</h4>
+              <div className="reflections-container">
+                {reflections.map((reflection) => (
+                  <div key={reflection._id} className="reflection-card">
+                    <div className="reflection-timestamp">
+                      {formatTimestamp(reflection.timestamp)}
+                    </div>
+                    <div className="reflection-text">
+                      {reflection.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
       </main>
     </div>

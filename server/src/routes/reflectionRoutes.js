@@ -1,7 +1,10 @@
 import express from "express";
-import { createReflection } from "../controllers/reflectionController.js";
+import { createReflection, getReflections } from "../controllers/reflectionController.js";
 
 const router = express.Router();
+
+// GET /api/reflection/:userId
+router.get("/:userId", getReflections);
 
 // POST /api/reflection
 router.post("/", createReflection);
