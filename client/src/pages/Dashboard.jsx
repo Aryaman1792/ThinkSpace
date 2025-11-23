@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import NotesSidebar from "../components/NotesSidebar.jsx";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const user = (() => {
     try {
       return JSON.parse(localStorage.getItem("user") || "null");
@@ -16,6 +19,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [reflections, setReflections] = useState([]);
+  const [activeNoteId, setActiveNoteId] = useState(null);
 
   const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000" });
 
@@ -110,106 +114,118 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="dashboard-grid">
-        <section className="dash-card hero">
-          <div>
-            <h2>Current flow</h2>
-            <p>Your thoughts are syncing in real time across every surface.</p>
-            <div className="hero-stats">
-              <div>
-                <span>07</span>
-                <p>concepts brewing</p>
-              </div>
-              <div>
-                <span>3m</span>
-                <p>avg. focus bursts</p>
-              </div>
-              <div>
-                <span>14</span>
-                <p>feedback loops</p>
-              </div>
-            </div>
-          </div>
-          <div className="orbital">
-            <span />
-            <span />
-            <span />
-          </div>
-        </section>
-
-        <section className="dash-card stack">
-          <h3>Idea sparks</h3>
-          <ul>
-            {sparkIdeas.map((idea) => (
-              <li key={idea}>
-                <p>{idea}</p>
-                <button className="ghost-btn" type="button">
-                  Expand
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="dash-card stack">
-          <h3>Today&apos;s rituals</h3>
-          <ul>
-            {rituals.map((ritual) => (
-              <li key={ritual.title}>
-                <div>
-                  <p>{ritual.title}</p>
-                  <span>{ritual.detail}</span>
-                </div>
-                <label className="toggle">
-                  <input type="checkbox" defaultChecked />
-                  <span />
-                </label>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="dash-card journal">
-          <h3>Mini journal</h3>
-          <p>Drop a sentence or two about what you want to explore next.</p>
-          <textarea 
-            placeholder="Today I want to explore..." 
-            rows={4}
-            value={reflectionText}
-            onChange={(e) => setReflectionText(e.target.value)}
+      <main className="dashboard-main-layout">
+        <div className="dashboard-left">
+          <NotesSidebar 
+            userId={user?.id} 
+            activeNoteId={activeNoteId}
+            onNoteSelect={setActiveNoteId}
           />
-          {successMessage && (
-            <p style={{ color: "green", marginTop: "10px", marginBottom: "10px" }}>
-              {successMessage}
-            </p>
-          )}
-          <button 
-            className="secondary-btn" 
-            type="button"
-            onClick={handleSaveReflection}
-            disabled={isLoading || !reflectionText.trim()}
-          >
-            {isLoading ? "Saving..." : "Save reflection"}
-          </button>
-          
-          {reflections.length > 0 && (
-            <div className="reflections-list">
-              <h4>Previous reflections</h4>
-              <div className="reflections-container">
-                {reflections.map((reflection) => (
-                  <div key={reflection._id} className="reflection-card">
-                    <div className="reflection-timestamp">
-                      {formatTimestamp(reflection.timestamp)}
-                    </div>
-                    <div className="reflection-text">
-                      {reflection.text}
-                    </div>
+        </div>
+
+        <div className="dashboard-right">
+          <div className="dashboard-grid">
+            <section className="dash-card hero">
+              <div>
+                <h2>Current flow</h2>
+                <p>Your thoughts are syncing in real time across every surface.</p>
+                <div className="hero-stats">
+                  <div>
+                    <span>07</span>
+                    <p>concepts brewing</p>
                   </div>
-                ))}
+                  <div>
+                    <span>3m</span>
+                    <p>avg. focus bursts</p>
+                  </div>
+                  <div>
+                    <span>14</span>
+                    <p>feedback loops</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
-        </section>
+              <div className="orbital">
+                <span />
+                <span />
+                <span />
+              </div>
+            </section>
+
+            <section className="dash-card stack">
+              <h3>Idea sparks</h3>
+              <ul>
+                {sparkIdeas.map((idea) => (
+                  <li key={idea}>
+                    <p>{idea}</p>
+                    <button className="ghost-btn" type="button">
+                      Expand
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="dash-card stack">
+              <h3>Today&apos;s rituals</h3>
+              <ul>
+                {rituals.map((ritual) => (
+                  <li key={ritual.title}>
+                    <div>
+                      <p>{ritual.title}</p>
+                      <span>{ritual.detail}</span>
+                    </div>
+                    <label className="toggle">
+                      <input type="checkbox" defaultChecked />
+                      <span />
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="dash-card journal">
+              <h3>Mini journal</h3>
+              <p>Drop a sentence or two about what you want to explore next.</p>
+              <textarea 
+                placeholder="Today I want to explore..." 
+                rows={4}
+                value={reflectionText}
+                onChange={(e) => setReflectionText(e.target.value)}
+              />
+              {successMessage && (
+                <p style={{ color: "green", marginTop: "10px", marginBottom: "10px" }}>
+                  {successMessage}
+                </p>
+              )}
+              <button 
+                className="secondary-btn" 
+                type="button"
+                onClick={handleSaveReflection}
+                disabled={isLoading || !reflectionText.trim()}
+              >
+                {isLoading ? "Saving..." : "Save reflection"}
+              </button>
+              
+              {reflections.length > 0 && (
+                <div className="reflections-list">
+                  <h4>Previous reflections</h4>
+                  <div className="reflections-container">
+                    {reflections.map((reflection) => (
+                      <div key={reflection._id} className="reflection-card">
+                        <div className="reflection-timestamp">
+                          {formatTimestamp(reflection.timestamp)}
+                        </div>
+                        <div className="reflection-text">
+                          {reflection.text}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+        </div>
       </main>
     </div>
   );
