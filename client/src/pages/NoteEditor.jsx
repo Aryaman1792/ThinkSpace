@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getNote, updateNote } from "../utils/noteAPI";
+import { getNote, updateNote, getBacklinks, updateLinks, getNotes } from "../utils/noteAPI";
+import { extractNoteLinks } from "../utils/extractLinks";
 
 export default function NoteEditor() {
   const { id } = useParams();
@@ -12,10 +13,20 @@ export default function NoteEditor() {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [backlinks, setBacklinks] = useState([]);
+  const [isLoadingBacklinks, setIsLoadingBacklinks] = useState(false);
   const autoSaveIntervalRef = useRef(null);
   const hasChangesRef = useRef(false);
   const titleRef = useRef("");
   const contentRef = useRef("");
+  
+  const user = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "null");
+    } catch {
+      return null;
+    }
+  })();
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -34,6 +45,9 @@ export default function NoteEditor() {
         contentRef.current = noteContent;
         setLastSaved(new Date(noteData.updatedAt || noteData.createdAt));
         hasChangesRef.current = false;
+        
+        // Fetch backlinks
+        fetchBacklinks(id);
       } catch (error) {
         console.error("Error fetching note:", error);
         navigate("/dashboard");
@@ -45,6 +59,20 @@ export default function NoteEditor() {
     fetchNote();
   }, [id, navigate]);
 
+  const fetchBacklinks = async (noteId) => {
+    if (!noteId) return;
+    
+    setIsLoadingBacklinks(true);
+    try {
+      const response = await getBacklinks(noteId);
+      setBacklinks(response.backlinks || []);
+    } catch (error) {
+      console.error("Error fetching backlinks:", error);
+    } finally {
+      setIsLoadingBacklinks(false);
+    }
+  };
+
   const saveNote = async (showNotification = false) => {
     if (!id || !hasChangesRef.current) return;
 
@@ -52,9 +80,23 @@ export default function NoteEditor() {
     try {
       const currentTitle = titleRef.current;
       const currentContent = contentRef.current;
+      
+      // First, update the note
       const response = await updateNote(id, { title: currentTitle, content: currentContent });
       setLastSaved(new Date());
       hasChangesRef.current = false;
+      
+      // Then, update links if user is available
+      if (user?.id) {
+        try {
+          await updateLinks(id, currentContent, user.id);
+          // Refresh backlinks after updating links
+          fetchBacklinks(id);
+        } catch (linkError) {
+          console.error("Error updating links:", linkError);
+          // Don't fail the save if link update fails
+        }
+      }
       
       if (showNotification) {
         setShowToast(true);
@@ -103,11 +145,24 @@ export default function NoteEditor() {
 
     setIsSaving(true);
     try {
+      // First, update the note
       const response = await updateNote(id, { title, content });
       setLastSaved(new Date());
       hasChangesRef.current = false;
       titleRef.current = title;
       contentRef.current = content;
+      
+      // Then, update links if user is available
+      if (user?.id) {
+        try {
+          await updateLinks(id, content, user.id);
+          // Refresh backlinks after updating links
+          fetchBacklinks(id);
+        } catch (linkError) {
+          console.error("Error updating links:", linkError);
+          // Don't fail the save if link update fails
+        }
+      }
       
       setShowToast(true);
       setTimeout(() => setShowToast(false), 2000);
@@ -117,6 +172,73 @@ export default function NoteEditor() {
       setIsSaving(false);
     }
   };
+  
+  // Render content with clickable links
+  const renderContentWithLinks = (text) => {
+    if (!text) return "";
+    const regex = /(\[\[([^\]]+)\]\])/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+    
+    while ((match = regex.exec(text)) !== null) {
+      // Add text before the link
+      if (match.index > lastIndex) {
+        parts.push({
+          type: "text",
+          content: text.substring(lastIndex, match.index)
+        });
+      }
+      
+      // Add the link
+      parts.push({
+        type: "link",
+        content: match[1], // Full [[...]]
+        title: match[2]    // Just the title
+      });
+      
+      lastIndex = regex.lastIndex;
+    }
+    
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push({
+        type: "text",
+        content: text.substring(lastIndex)
+      });
+    }
+    
+    return parts;
+  };
+  
+  const handleLinkClick = async (linkTitle) => {
+    // Find note by title
+    try {
+      if (!user?.id) return;
+      
+      const response = await getNotes(user.id);
+      const notes = response.notes || [];
+      const targetNote = notes.find(note => 
+        note.title.toLowerCase() === linkTitle.toLowerCase()
+      );
+      
+      if (targetNote) {
+        navigate(`/notes/${targetNote._id}`);
+      } else {
+        // Note doesn't exist yet - it will be created when links are updated
+        // For now, navigate to dashboard where user can see it in the sidebar
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error navigating to linked note:", error);
+    }
+  };
+  
+  const handleBacklinkClick = (backlinkNoteId) => {
+    navigate(`/notes/${backlinkNoteId}`);
+  };
+  
+  const detectedLinks = extractNoteLinks(content);
 
   const formatLastSaved = () => {
     if (!lastSaved) return "";
@@ -186,12 +308,76 @@ export default function NoteEditor() {
             onChange={handleTitleChange}
             placeholder="Untitled Note"
           />
+          
+          {/* Link detection indicator */}
+          {detectedLinks.length > 0 && (
+            <div className="detected-links-indicator">
+              <span className="link-icon">🔗</span>
+              <span>{detectedLinks.length} link{detectedLinks.length !== 1 ? 's' : ''} detected</span>
+            </div>
+          )}
+          
           <textarea
             className="note-content-textarea"
             value={content}
             onChange={handleContentChange}
-            placeholder="Start writing your note here..."
+            placeholder="Start writing your note here... Use [[Note Title]] to create links."
           />
+          
+          {/* Content preview with clickable links */}
+          {content && (
+            <div className="note-content-preview">
+              <div className="preview-label">Preview (links are clickable):</div>
+              <div className="preview-content">
+                {renderContentWithLinks(content).map((part, index) => {
+                  if (part.type === "link") {
+                    return (
+                      <span
+                        key={index}
+                        className="note-link"
+                        onClick={() => handleLinkClick(part.title)}
+                        title={`Click to navigate to "${part.title}"`}
+                      >
+                        {part.content}
+                      </span>
+                    );
+                  }
+                  return <span key={index}>{part.content}</span>;
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Backlinks Section */}
+        <div className="backlinks-section">
+          <h3 className="backlinks-heading">Linked References</h3>
+          {isLoadingBacklinks ? (
+            <div className="backlinks-loading">Loading backlinks...</div>
+          ) : backlinks.length === 0 ? (
+            <div className="backlinks-empty">
+              No backlinks yet — start linking notes using [[Note Name]]
+            </div>
+          ) : (
+            <div className="backlinks-list">
+              {backlinks.map((backlink) => (
+                <div
+                  key={backlink._id}
+                  className="backlink-card"
+                  onClick={() => handleBacklinkClick(backlink._id)}
+                >
+                  <div className="backlink-title">{backlink.title}</div>
+                  <div className="backlink-snippet">
+                    {backlink.content ? 
+                      (backlink.content.length > 50 
+                        ? backlink.content.substring(0, 50) + "..." 
+                        : backlink.content)
+                      : "No content"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
