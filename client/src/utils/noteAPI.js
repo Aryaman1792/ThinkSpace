@@ -54,3 +54,27 @@ export const deleteNote = async (id) => {
   }
 };
 
+export const getBacklinks = async (noteId) => {
+  try {
+    const response = await api.get(`/api/links/backlinks/${noteId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching backlinks:", error);
+    throw error;
+  }
+};
+
+export const updateLinks = async (noteId, content, userId) => {
+  try {
+    const response = await api.post("/api/links/updateLinksForNote", {
+      noteId,
+      content,
+      userId
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating links:", error);
+    throw error;
+  }
+};
+
