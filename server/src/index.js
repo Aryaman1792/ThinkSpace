@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import reflectionRoutes from "./routes/reflectionRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
 import linkRoutes from "./routes/linkRoutes.js";
+import postRoutes from "./routes/posts.js";
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/reflection", reflectionRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/links", linkRoutes);
+app.use("/api/posts", postRoutes);
 
 
 const connectDB = async () => {
@@ -27,7 +29,7 @@ const connectDB = async () => {
     if (!process.env.MONGO_URI) {
       throw new Error("MONGO_URI is not defined in .env file");
     }
-    
+
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ MongoDB Connected to ThinkSpace");
   } catch (error) {
