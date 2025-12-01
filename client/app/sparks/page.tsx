@@ -38,3 +38,5 @@ export default function SparkFeed() {
         </MainLayout>
     );
 }
+
+// Transform to text feed
