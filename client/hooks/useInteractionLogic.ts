@@ -15,9 +15,11 @@ interface InteractionActive {
 interface UseInteractionLogicProps {
     initialCounts: InteractionCounts;
     onInteraction?: (type: string, value: number) => void;
+    shareUrl?: string;
+    shareTitle?: string;
 }
 
-export const useInteractionLogic = ({ initialCounts, onInteraction }: UseInteractionLogicProps) => {
+export const useInteractionLogic = ({ initialCounts, onInteraction, shareUrl, shareTitle }: UseInteractionLogicProps) => {
     const [counts, setCounts] = useState(initialCounts);
     const [active, setActive] = useState<InteractionActive>({
         spark: false,
@@ -34,14 +36,27 @@ export const useInteractionLogic = ({ initialCounts, onInteraction }: UseInterac
         }));
     }, [initialCounts.thoughts]);
 
-    const handleInteraction = (type: string, onThoughtsClick?: () => void) => {
+    const handleInteraction = async (type: string, onThoughtsClick?: () => void) => {
         if (type === "thoughts") {
             if (onThoughtsClick) onThoughtsClick();
             return;
         }
 
         if (type === "spread") {
-            navigator.clipboard.writeText(window.location.href);
+            const url = shareUrl
+                ? (shareUrl.startsWith('http') ? shareUrl : `${window.location.origin}${shareUrl}`)
+                : window.location.href;
+
+            const title = shareTitle || "Check this out on ThinkSpace!";
+
+            try {
+                await navigator.clipboard.writeText(url);
+                window.alert("Link copied to clipboard!");
+            } catch (error) {
+                console.error("Error sharing:", error);
+                // Fallback if clipboard fails (rare but possible)
+                window.alert("Failed to copy link.");
+            }
 
             const newCounts = { ...counts, spread: counts.spread + 1 };
             setCounts(newCounts);
