@@ -53,3 +53,4 @@ export default function Explore() {
 // Google search UI
 // Fix trending photos
 // Fix fresh sparks photos
+// Fallback images
