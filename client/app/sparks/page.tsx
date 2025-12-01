@@ -43,3 +43,4 @@ export default function SparkFeed() {
 // Add 20 messages
 // Infinite scroll
 // User numbering
+// Add spark button
