@@ -1,8 +1,10 @@
 "use client";
 
+// import { useState, useEffect } from "react";
+// import MainLayout from "@/components/MainLayout";
 import { useState, useEffect } from "react";
-import MainLayout from "@/components/MainLayout";
-
+// import MainLayout from "@/components/MainLayout";
+import MainLayout from "@/components/layout/MainLayout";
 export default function SparkFeed() {
     const uniqueMessages = [
         "Just shipped a new feature! The feeling of seeing your code in production is unmatched. 🚀",
