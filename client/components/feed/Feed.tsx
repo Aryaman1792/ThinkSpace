@@ -6,6 +6,7 @@ import GlassCard from "@/components/ui/GlassCard";
 import InteractionBar from "@/components/ui/InteractionBar";
 import PostDetailModal from "@/components/profile/PostDetailModal";
 import { usePostList } from "@/hooks/usePostList";
+import CreatePost from "./CreatePost";
 
 interface PostProps {
     _id: string;
@@ -94,12 +95,17 @@ const VisualCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps,
     </GlassCard>
 );
 
+
 export default function Feed({ initialPosts }: { initialPosts: any[] }) {
     const { posts, setPosts, selectedPost, setSelectedPost, updatePostStats, incrementThoughts } = usePostList(initialPosts);
 
     useEffect(() => {
         setPosts(initialPosts);
     }, [initialPosts]);
+
+    const handlePostCreated = (newPost: any) => {
+        setPosts(prev => [newPost, ...prev]);
+    };
 
     const handleCommentAdd = () => {
         if (!selectedPost) return;
@@ -108,6 +114,7 @@ export default function Feed({ initialPosts }: { initialPosts: any[] }) {
 
     return (
         <div className="max-w-2xl mx-auto pb-20">
+            <CreatePost onPostCreated={handlePostCreated} />
             {posts?.map((post) => (
                 <div key={post._id}>
                     {post.type === 'thought' ?
