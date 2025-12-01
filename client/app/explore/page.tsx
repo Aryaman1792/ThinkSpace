@@ -56,3 +56,4 @@ export default function Explore() {
 // Fallback images
 // User search
 // Search dropdown
+// Final polish
