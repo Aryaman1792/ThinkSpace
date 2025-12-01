@@ -52,3 +52,4 @@ export default function Explore() {
 // Search autocomplete
 // Google search UI
 // Fix trending photos
+// Fix fresh sparks photos
