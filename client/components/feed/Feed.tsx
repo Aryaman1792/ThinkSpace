@@ -25,7 +25,7 @@ interface PostProps {
     onInteraction?: (type: string, value: number) => void;
 }
 
-const ThoughtCard = ({ post, onInteraction }: { post: PostProps, onInteraction: any }) => (
+const ThoughtCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps, onInteraction: any, onThoughtsClick: () => void }) => (
     <GlassCard className="mb-6 hover:bg-white/40 transition-all duration-300 border-l-4 border-l-indigo-400">
         <div className="flex items-start gap-4">
             <img src={post.user.image} alt={post.user.name} className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
@@ -36,7 +36,12 @@ const ThoughtCard = ({ post, onInteraction }: { post: PostProps, onInteraction: 
                         <p className="text-xs text-slate-500">{new Date(post.createdAt).toLocaleDateString('en-US')}</p>
                     </div>
                 </div>
-                <p className="mt-2 text-slate-700 leading-relaxed text-lg">{post.content}</p>
+                <p
+                    className="mt-2 text-slate-700 leading-relaxed text-lg cursor-pointer hover:text-indigo-900 transition-colors"
+                    onClick={onThoughtsClick}
+                >
+                    {post.content}
+                </p>
 
                 <div className="mt-4 pt-4 border-t border-indigo-50">
                     <InteractionBar
@@ -47,6 +52,9 @@ const ThoughtCard = ({ post, onInteraction }: { post: PostProps, onInteraction: 
                             spread: post.spread || 0
                         }}
                         onInteraction={(type, value) => onInteraction(post._id, type, value)}
+                        onThoughtsClick={onThoughtsClick}
+                        shareUrl={`/explore/post/${post._id}`}
+                        shareTitle={`Check out this thought by ${post.user.name} on ThinkSpace`}
                     />
                 </div>
             </div>
@@ -54,7 +62,7 @@ const ThoughtCard = ({ post, onInteraction }: { post: PostProps, onInteraction: 
     </GlassCard>
 );
 
-const VisualCard = ({ post, onInteraction }: { post: PostProps, onInteraction: any }) => (
+const VisualCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps, onInteraction: any, onThoughtsClick: () => void }) => (
     <GlassCard className="mb-6 overflow-hidden hover:shadow-xl transition-all duration-300 border-0">
         <div className="relative aspect-video w-full overflow-hidden">
             <img src={post.image} alt="Visual" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
@@ -64,7 +72,12 @@ const VisualCard = ({ post, onInteraction }: { post: PostProps, onInteraction: a
             </div>
         </div>
         <div className="p-5">
-            <p className="text-slate-700 mb-4 font-medium">{post.caption}</p>
+            <p
+                className="text-slate-700 mb-4 font-medium cursor-pointer hover:text-indigo-900 transition-colors"
+                onClick={onThoughtsClick}
+            >
+                {post.caption}
+            </p>
             <InteractionBar
                 initialCounts={{
                     spark: post.likes,
@@ -73,6 +86,9 @@ const VisualCard = ({ post, onInteraction }: { post: PostProps, onInteraction: a
                     spread: post.spread || 0
                 }}
                 onInteraction={(type, value) => onInteraction(post._id, type, value)}
+                onThoughtsClick={onThoughtsClick}
+                shareUrl={`/explore/post/${post._id}`}
+                shareTitle={`Check out this visual by ${post.user.name} on ThinkSpace`}
             />
         </div>
     </GlassCard>
@@ -93,10 +109,18 @@ export default function Feed({ initialPosts }: { initialPosts: any[] }) {
     return (
         <div className="max-w-2xl mx-auto pb-20">
             {posts?.map((post) => (
-                <div key={post._id} onClick={() => setSelectedPost(post)} className="cursor-pointer">
+                <div key={post._id}>
                     {post.type === 'thought' ?
-                        <ThoughtCard post={post} onInteraction={updatePostStats} /> :
-                        <VisualCard post={post} onInteraction={updatePostStats} />
+                        <ThoughtCard
+                            post={post}
+                            onInteraction={updatePostStats}
+                            onThoughtsClick={() => setSelectedPost(post)}
+                        /> :
+                        <VisualCard
+                            post={post}
+                            onInteraction={updatePostStats}
+                            onThoughtsClick={() => setSelectedPost(post)}
+                        />
                     }
                 </div>
             ))}

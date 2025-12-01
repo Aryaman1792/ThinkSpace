@@ -124,6 +124,8 @@ const PostDetailModal = ({ post, isOpen, onClose, onCommentAdd, onInteraction }:
                                         spread: post.stats?.spread ?? post.spread ?? 0
                                     }}
                                     onInteraction={onInteraction}
+                                    shareUrl={`/explore/post/${post._id}`}
+                                    shareTitle={`Check out this post by ${post.user.name || post.user} on ThinkSpace`}
                                 />
 
                                 <div className="mt-4 text-xs text-slate-400 font-medium uppercase tracking-wide">

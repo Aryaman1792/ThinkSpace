@@ -16,6 +16,8 @@ interface InteractionBarProps {
     onThoughtsClick?: () => void;
     className?: string;
     variant?: "default" | "minimal";
+    shareUrl?: string;
+    shareTitle?: string;
 }
 
 const InteractionBar = ({
@@ -23,12 +25,16 @@ const InteractionBar = ({
     onInteraction,
     onThoughtsClick,
     className,
-    variant = "default"
+    variant = "default",
+    shareUrl,
+    shareTitle
 }: InteractionBarProps) => {
 
     const { counts, active, handleInteraction } = useInteractionLogic({
         initialCounts,
-        onInteraction
+        onInteraction,
+        shareUrl,
+        shareTitle
     });
 
     const buttons = [
