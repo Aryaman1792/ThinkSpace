@@ -1,8 +1,20 @@
+// "use client";
+
+// import { useState, useEffect } from "react";
+// import MainLayout from "@/components/MainLayout";
+// import GlassCard from "@/components/GlassCard";
+// import { motion } from "framer-motion";
+// import { Search, TrendingUp, Sparkles } from "lucide-react";
+// import Link from "next/link";
+// import { imageUrls } from "@/lib/content";
+
 "use client";
 
 import { useState, useEffect } from "react";
-import MainLayout from "@/components/MainLayout";
-import GlassCard from "@/components/GlassCard";
+import MainLayout from "@/components/layout/MainLayout";
+
+import GlassCard from "@/components/ui/GlassCard";
+
 import { motion } from "framer-motion";
 import { Search, TrendingUp, Sparkles } from "lucide-react";
 import Link from "next/link";
