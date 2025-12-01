@@ -83,7 +83,8 @@ const seedDB = async () => {
 
             if (isVisual) {
                 post.type = 'visual';
-                post.image = visualImages[Math.floor(Math.random() * visualImages.length)];
+                // Use Picsum with a random seed to ensure unique images
+                post.image = `https://picsum.photos/seed/${faker.string.uuid()}/800/600`;
                 post.caption = faker.lorem.sentence();
             } else {
                 post.type = 'thought';

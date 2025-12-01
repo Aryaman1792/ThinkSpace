@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import Post from '../models/Post.js';
 
 const router = express.Router();
@@ -17,7 +18,11 @@ router.get('/', async (req, res) => {
 router.post('/create', async (req, res) => {
     const { content, image, userId } = req.body;
     try {
-        const newPost = new Post({ content, image, user: userId });
+        let postImage = image;
+        if (!postImage) {
+            postImage = `https://picsum.photos/seed/${crypto.randomUUID()}/800/600`;
+        }
+        const newPost = new Post({ content, image: postImage, user: userId });
         await newPost.save();
         res.status(201).json(newPost);
     } catch (error) {
