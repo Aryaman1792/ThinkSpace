@@ -44,3 +44,4 @@ export default function SparkFeed() {
 // Infinite scroll
 // User numbering
 // Add spark button
+// UI polish
