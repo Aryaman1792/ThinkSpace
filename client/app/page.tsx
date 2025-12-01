@@ -12,7 +12,7 @@ export default async function Home() {
         <h1 className="text-3xl font-bold text-slate-800 mb-2">Home Feed</h1>
         <p className="text-slate-500">Your daily dose of inspiration.</p>
       </div>
-      <Feed posts={posts} />
+      <Feed initialPosts={posts} />
     </MainLayout>
   );
 }

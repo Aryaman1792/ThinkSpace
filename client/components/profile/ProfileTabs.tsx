@@ -24,9 +24,8 @@ const ProfileTabs = ({ activeTab, setActiveTab }: ProfileTabsProps) => {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative px-6 py-4 flex items-center gap-2 transition-colors ${
-                            isActive ? "text-indigo-600" : "text-slate-500 hover:text-slate-800"
-                        }`}
+                        className={`relative px-6 py-4 flex items-center gap-2 transition-colors ${isActive ? "text-indigo-600" : "text-slate-500 hover:text-slate-800"
+                            }`}
                     >
                         <tab.icon size={20} />
                         <span className="font-medium">{tab.label}</span>

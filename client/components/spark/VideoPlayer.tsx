@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Heart, MessageCircle, Share2, Music2 } from "lucide-react";
+import { Zap, CloudRain, Brain, CornerUpRight, Music2 } from "lucide-react";
 
 interface VideoProps {
     id: string;
@@ -14,7 +14,23 @@ interface VideoProps {
     likes: number;
 }
 
+import PostDetailModal from "@/components/profile/PostDetailModal";
+import { useState } from "react";
+
+import { useInteractionLogic } from "@/hooks/useInteractionLogic";
+
 const VideoCard = ({ video }: { video: VideoProps }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const { counts, active, handleInteraction, setCounts } = useInteractionLogic({
+        initialCounts: {
+            spark: video.likes,
+            dim: 12,
+            thoughts: 124,
+            spread: 89
+        }
+    });
+
     return (
         <div className="h-full w-full snap-start relative flex items-center justify-center bg-black">
             <video
@@ -45,22 +61,69 @@ const VideoCard = ({ video }: { video: VideoProps }) => {
                     </div>
 
                     <div className="flex flex-col gap-6 mb-20 md:mb-8">
-                        <ActionButton icon={Heart} count={video.likes} />
-                        <ActionButton icon={MessageCircle} count={124} />
-                        <ActionButton icon={Share2} count="Share" />
+                        <ActionButton
+                            icon={Zap}
+                            count={counts.spark}
+                            label="Spark"
+                            color="text-cyan-400"
+                            isActive={active.spark}
+                            onClick={() => handleInteraction("spark")}
+                        />
+                        <ActionButton
+                            icon={CloudRain}
+                            count={counts.dim}
+                            label="Dim"
+                            color="text-blue-400"
+                            isActive={active.dim}
+                            onClick={() => handleInteraction("dim")}
+                        />
+                        <ActionButton
+                            icon={Brain}
+                            count={counts.thoughts}
+                            label="Thoughts"
+                            color="text-pink-500"
+                            onClick={() => handleInteraction("thoughts", () => setIsModalOpen(true))}
+                        />
+                        <ActionButton
+                            icon={CornerUpRight}
+                            count={counts.spread}
+                            label="Spread"
+                            color="text-green-400"
+                            onClick={() => handleInteraction("spread")}
+                        />
                     </div>
                 </div>
             </div>
+
+            <PostDetailModal
+                post={{
+                    ...video,
+                    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80", // Placeholder image for modal as video modal might be different, but using same modal for consistency
+                    userImage: video.user.image,
+                    user: video.user,
+                    title: video.description,
+                    stats: counts
+                }}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onCommentAdd={() => setCounts(prev => ({ ...prev, thoughts: prev.thoughts + 1 }))}
+                onInteraction={(type, value) => {
+                    setCounts(prev => ({ ...prev, [type]: value }));
+                }}
+            />
         </div>
     );
 };
 
-const ActionButton = ({ icon: Icon, count }: { icon: any, count: number | string }) => (
-    <button className="flex flex-col items-center gap-1 group">
-        <div className="p-3 bg-white/20 backdrop-blur-md rounded-full group-hover:bg-white/40 transition-colors border border-white/20">
-            <Icon size={28} className="text-white" />
+const ActionButton = ({ icon: Icon, count, label, color, onClick, isActive }: { icon: any, count: number | string, label: string, color: string, onClick?: () => void, isActive?: boolean }) => (
+    <button
+        onClick={onClick}
+        className="flex flex-col items-center gap-1 group"
+    >
+        <div className={`p-3 bg-white/10 backdrop-blur-md rounded-full transition-all duration-300 border border-white/10 ${isActive ? `bg-white/30 scale-110 ${color}` : 'group-hover:bg-white/20'}`}>
+            <Icon size={28} className={`transition-colors ${isActive ? 'fill-current' : 'opacity-90'} ${isActive ? color : 'text-white'}`} />
         </div>
-        <span className="text-xs font-medium text-white">{count}</span>
+        <span className="text-xs font-bold text-white">{count}</span>
     </button>
 );
 
