@@ -45,3 +45,4 @@ export default function SparkFeed() {
 // User numbering
 // Add spark button
 // UI polish
+// Enter key support
