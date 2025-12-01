@@ -55,3 +55,4 @@ export default function Explore() {
 // Fix fresh sparks photos
 // Fallback images
 // User search
+// Search dropdown
