@@ -22,13 +22,55 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 md:hidden p-4">
+            <nav className="fixed top-0 left-0 right-0 z-50 p-4">
                 <div className="glass-panel rounded-full px-6 py-3 flex items-center justify-between">
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                        ThinkSpace
-                    </h1>
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-cyan-400 flex items-center justify-center text-white text-lg font-bold">
+                            T
+                        </div>
+                        <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                            ThinkSpace
+                        </h1>
+                    </Link>
 
-                    <div className="flex items-center gap-4">
+                    {/* Desktop nav */}
+                    <div className="hidden md:flex items-center gap-6">
+                        <div className="flex items-center gap-4">
+                            {navItems.map((item) => {
+                                const isActive = pathname === item.id;
+                                const Icon = item.icon;
+                                return (
+                                    <Link key={item.id} href={item.id}>
+                                        <div
+                                            className={cn(
+                                                "relative flex items-center justify-center h-9 w-9 rounded-full transition-colors",
+                                                isActive
+                                                    ? "text-violet-600"
+                                                    : "text-slate-500 hover:text-slate-800"
+                                            )}
+                                        >
+                                            <Icon size={20} />
+                                            {isActive && (
+                                                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-violet-500" />
+                                            )}
+                                        </div>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        <button className="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-sky-500 text-white text-sm font-medium shadow-md hover:shadow-lg transition-shadow">
+                            Spark a Thought
+                        </button>
+
+                        <div className="ml-2">
+                            <UserButton afterSignOutUrl="/sign-in" />
+                        </div>
+                    </div>
+
+                    {/* Mobile controls */}
+                    <div className="flex items-center gap-4 md:hidden">
                         <UserButton afterSignOutUrl="/sign-in" />
                         <button
                             onClick={() => setIsOpen(!isOpen)}
