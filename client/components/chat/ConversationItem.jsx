@@ -28,16 +28,16 @@ const ConversationItem = ({ conversation, isActive, onClick, currentUserId }) =>
             className={cn(
                 "flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors border-l-4",
                 isActive
-                    ? "bg-indigo-50 border-indigo-500"
+                    ? "bg-[#72B7BF]/20 border-[#72B7BF]"
                     : "border-transparent hover:border-slate-200"
             )}
         >
             <div className="relative flex-shrink-0">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-violet-400 flex items-center justify-center text-white font-semibold text-lg">
+                <div className="w-14 h-14 rounded-full bg-[#72B7BF] flex items-center justify-center text-white font-semibold text-lg">
                     {`U${otherParticipantId?.slice(-2)}` || "U"}
                 </div>
                 {hasUnread && (
-                    <div className="absolute top-0 right-0 w-3 h-3 bg-indigo-500 border-2 border-white rounded-full"></div>
+                    <div className="absolute top-0 right-0 w-3 h-3 bg-[#72B7BF] border-2 border-white rounded-full"></div>
                 )}
             </div>
 

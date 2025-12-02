@@ -19,7 +19,7 @@ const ChatHeader = ({ conversation, otherParticipant, onBack }) => {
 
                 <div className="flex items-center gap-3">
                     <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-violet-400 flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 rounded-full bg-[#72B7BF] flex items-center justify-center text-white font-semibold">
                             {otherParticipant?.name?.[0]?.toUpperCase() || "U"}
                         </div>
                         <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>

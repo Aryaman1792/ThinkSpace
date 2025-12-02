@@ -33,7 +33,7 @@ export default function Explore() {
     );
     const [categories, setCategories] = useState([
         { id: "digital-art", name: "Digital Art", image: imageUrls[0] },
-        { id: "tech", name: "Technology", image: imageUrls[1] },
+        { id: "technology", name: "Technology", image: imageUrls[1] },
         { id: "design", name: "Design", image: imageUrls[2] },
         { id: "music", name: "Music", image: imageUrls[3] },
         { id: "photography", name: "Photography", image: imageUrls[4] },

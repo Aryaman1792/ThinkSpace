@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, Zap, Compass, ShoppingBag, User, Settings, LogOut, LogIn, UserPlus, MessageCircle } from "lucide-react";
+import { Home, Zap, Compass, Users, User, Settings, LogOut, LogIn, UserPlus, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 
@@ -17,7 +17,7 @@ const Sidebar = () => {
         { id: "/sparks", icon: Zap, label: "Spark Feed" },
         { id: "/explore", icon: Compass, label: "Explore" },
         { id: "/messages", icon: MessageCircle, label: "Messages" },
-        { id: "/market", icon: ShoppingBag, label: "Marketplace" },
+        { id: "/community", icon: Users, label: "Community" },
         { id: "/profile", icon: User, label: "Profile" },
     ];
 
@@ -47,7 +47,7 @@ const Sidebar = () => {
                 animate="visible"
             >
                 <div className="px-4 py-4 mb-2">
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-x">
+                    <h1 className="text-2xl font-bold text-[#72B7BF]">
                         ThinkSpace
                     </h1>
                 </div>
@@ -61,7 +61,7 @@ const Sidebar = () => {
                                     variants={itemVariants}
                                     className={cn(
                                         "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative overflow-hidden",
-                                        isActive ? "text-indigo-600" : "text-slate-500 hover:text-slate-800"
+                                        isActive ? "text-[#72B7BF]" : "text-slate-500 hover:text-slate-800"
                                     )}
                                     whileHover={{ scale: 1.02, x: 4 }}
                                     whileTap={{ scale: 0.98 }}
@@ -69,7 +69,7 @@ const Sidebar = () => {
                                     {isActive && (
                                         <motion.div
                                             layoutId="activePill"
-                                            className="absolute inset-0 bg-indigo-50/80 rounded-2xl -z-10"
+                                            className="absolute inset-0 bg-[#72B7BF]/20 rounded-2xl -z-10"
                                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                         />
                                     )}
@@ -81,7 +81,7 @@ const Sidebar = () => {
                     })}
                 </nav>
 
-                <div className="mt-4 pt-4 border-t border-indigo-100/20 flex flex-col gap-1">
+                <div className="mt-4 pt-4 border-t border-[#72B7BF]/20 flex flex-col gap-1">
                     {isSignedIn ? (
                         <>
                             <Link href="/settings">
@@ -111,7 +111,7 @@ const Sidebar = () => {
                             <Link href="/sign-in">
                                 <motion.div
                                     variants={itemVariants}
-                                    className="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                                    className="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-[#72B7BF] hover:bg-[#72B7BF]/10 transition-all"
                                     whileHover={{ scale: 1.02, x: 4 }}
                                 >
                                     <LogIn size={22} />
@@ -122,7 +122,7 @@ const Sidebar = () => {
                             <Link href="/sign-up">
                                 <motion.div
                                     variants={itemVariants}
-                                    className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:from-indigo-600 hover:to-violet-600 transition-all shadow-lg shadow-indigo-500/30"
+                                    className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#72B7BF] text-white hover:bg-[#5da3ab] transition-all shadow-lg shadow-teal-500/30"
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >

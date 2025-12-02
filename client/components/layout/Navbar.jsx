@@ -24,7 +24,7 @@ const Navbar = () => {
         <>
             <nav className="fixed top-0 left-0 right-0 z-50 md:hidden p-4">
                 <div className="glass-panel rounded-full px-6 py-3 flex items-center justify-between">
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                    <h1 className="text-xl font-bold text-[#72B7BF]">
                         ThinkSpace
                     </h1>
 
@@ -59,7 +59,7 @@ const Navbar = () => {
                                     >
                                         <div className={cn(
                                             "flex items-center gap-4 p-4 rounded-2xl transition-all",
-                                            isActive ? "bg-indigo-50 text-indigo-600" : "text-slate-500"
+                                            isActive ? "bg-[#72B7BF]/20 text-[#72B7BF]" : "text-slate-500"
                                         )}>
                                             <item.icon size={24} />
                                             <span className="text-lg font-medium">{item.label}</span>

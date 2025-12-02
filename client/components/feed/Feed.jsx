@@ -10,7 +10,7 @@ import { usePostList } from "@/hooks/usePostList";
 import CreatePost from "./CreatePost";
 
 const ThoughtCard = ({ post, onInteraction, onThoughtsClick }) => (
-    <GlassCard className="mb-6 hover:bg-white/40 transition-all duration-300 border-l-4 border-l-indigo-400">
+    <GlassCard className="mb-6 hover:bg-white/40 transition-all duration-300 border-l-4 border-l-[#72B7BF]">
         <div className="flex items-start gap-4">
             <img src={post.user.image} alt={post.user.name} className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
             <div className="flex-1">
@@ -21,13 +21,13 @@ const ThoughtCard = ({ post, onInteraction, onThoughtsClick }) => (
                     </div>
                 </div>
                 <p
-                    className="mt-2 text-slate-700 leading-relaxed text-lg cursor-pointer hover:text-indigo-900 transition-colors"
+                    className="mt-2 text-slate-700 leading-relaxed text-lg cursor-pointer hover:text-[#72B7BF] transition-colors"
                     onClick={onThoughtsClick}
                 >
                     {post.content}
                 </p>
 
-                <div className="mt-4 pt-4 border-t border-indigo-50">
+                <div className="mt-4 pt-4 border-t border-[#72B7BF]/20">
                     <InteractionBar
                         initialCounts={{
                             spark: post.likes,
@@ -57,7 +57,7 @@ const VisualCard = ({ post, onInteraction, onThoughtsClick }) => (
         </div>
         <div className="p-5">
             <p
-                className="text-slate-700 mb-4 font-medium cursor-pointer hover:text-indigo-900 transition-colors"
+                className="text-slate-700 mb-4 font-medium cursor-pointer hover:text-[#72B7BF] transition-colors"
                 onClick={onThoughtsClick}
             >
                 {post.caption}

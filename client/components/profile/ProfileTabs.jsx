@@ -13,14 +13,14 @@ const ProfileTabs = ({ activeTab, setActiveTab }) => {
     ];
 
     return (
-        <div className="flex items-center justify-center md:justify-start border-b border-indigo-100 mb-8">
+        <div className="flex items-center justify-center md:justify-start border-b border-[#72B7BF]/20 mb-8">
             {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative px-6 py-4 flex items-center gap-2 transition-colors ${isActive ? "text-indigo-600" : "text-slate-500 hover:text-slate-800"
+                        className={`relative px-6 py-4 flex items-center gap-2 transition-colors ${isActive ? "text-[#72B7BF]" : "text-slate-500 hover:text-slate-800"
                             }`}
                     >
                         <tab.icon size={20} />
@@ -28,7 +28,7 @@ const ProfileTabs = ({ activeTab, setActiveTab }) => {
                         {isActive && (
                             <motion.div
                                 layoutId="activeTab"
-                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600"
+                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#72B7BF]"
                             />
                         )}
                     </button>
