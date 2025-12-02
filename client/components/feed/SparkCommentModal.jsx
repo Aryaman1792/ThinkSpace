@@ -3,14 +3,7 @@
 import React, { useState } from "react";
 import { X, Send } from "lucide-react";
 
-interface SparkCommentModalProps {
-    spark: any;
-    isOpen: boolean;
-    onClose: () => void;
-    onCommentSubmit: (sparkId: string) => void;
-}
-
-const SparkCommentModal = ({ spark, isOpen, onClose, onCommentSubmit }: SparkCommentModalProps) => {
+const SparkCommentModal = ({ spark, isOpen, onClose, onCommentSubmit }) => {
     const [comment, setComment] = useState("");
 
     if (!isOpen || !spark) return null;

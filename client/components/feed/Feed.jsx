@@ -2,31 +2,14 @@
 
 import React, { useEffect } from "react";
 import { Zap, CloudRain, Brain, Share2 } from "lucide-react";
+import { motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
 import InteractionBar from "@/components/ui/InteractionBar";
 import PostDetailModal from "@/components/profile/PostDetailModal";
 import { usePostList } from "@/hooks/usePostList";
 import CreatePost from "./CreatePost";
 
-interface PostProps {
-    _id: string;
-    type: 'thought' | 'visual';
-    user: {
-        name: string;
-        image: string;
-    };
-    content?: string;
-    image?: string;
-    caption?: string;
-    likes: number;
-    dim?: number;
-    thoughts?: number;
-    spread?: number;
-    createdAt: string;
-    onInteraction?: (type: string, value: number) => void;
-}
-
-const ThoughtCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps, onInteraction: any, onThoughtsClick: () => void }) => (
+const ThoughtCard = ({ post, onInteraction, onThoughtsClick }) => (
     <GlassCard className="mb-6 hover:bg-white/40 transition-all duration-300 border-l-4 border-l-indigo-400">
         <div className="flex items-start gap-4">
             <img src={post.user.image} alt={post.user.name} className="w-12 h-12 rounded-full border-2 border-white shadow-sm" />
@@ -63,7 +46,7 @@ const ThoughtCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps
     </GlassCard>
 );
 
-const VisualCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps, onInteraction: any, onThoughtsClick: () => void }) => (
+const VisualCard = ({ post, onInteraction, onThoughtsClick }) => (
     <GlassCard className="mb-6 overflow-hidden hover:shadow-xl transition-all duration-300 border-0">
         <div className="relative aspect-video w-full overflow-hidden">
             <img src={post.image} alt="Visual" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
@@ -96,14 +79,14 @@ const VisualCard = ({ post, onInteraction, onThoughtsClick }: { post: PostProps,
 );
 
 
-export default function Feed({ initialPosts }: { initialPosts: any[] }) {
+export default function Feed({ initialPosts }) {
     const { posts, setPosts, selectedPost, setSelectedPost, updatePostStats, incrementThoughts } = usePostList(initialPosts);
 
     useEffect(() => {
         setPosts(initialPosts);
     }, [initialPosts]);
 
-    const handlePostCreated = (newPost: any) => {
+    const handlePostCreated = (newPost) => {
         setPosts(prev => [newPost, ...prev]);
     };
 
@@ -112,25 +95,53 @@ export default function Feed({ initialPosts }: { initialPosts: any[] }) {
         incrementThoughts(selectedPost._id);
     };
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { y: 20, opacity: 0 },
+        show: { y: 0, opacity: 1 }
+    };
+
     return (
         <div className="max-w-2xl mx-auto pb-20">
-            <CreatePost onPostCreated={handlePostCreated} />
-            {posts?.map((post) => (
-                <div key={post._id}>
-                    {post.type === 'thought' ?
-                        <ThoughtCard
-                            post={post}
-                            onInteraction={updatePostStats}
-                            onThoughtsClick={() => setSelectedPost(post)}
-                        /> :
-                        <VisualCard
-                            post={post}
-                            onInteraction={updatePostStats}
-                            onThoughtsClick={() => setSelectedPost(post)}
-                        />
-                    }
-                </div>
-            ))}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <CreatePost onPostCreated={handlePostCreated} />
+            </motion.div>
+
+            <motion.div
+                variants={container}
+                initial="hidden"
+                animate="show"
+            >
+                {posts?.map((post) => (
+                    <motion.div key={post._id} variants={item}>
+                        {post.type === 'thought' ?
+                            <ThoughtCard
+                                post={post}
+                                onInteraction={updatePostStats}
+                                onThoughtsClick={() => setSelectedPost(post)}
+                            /> :
+                            <VisualCard
+                                post={post}
+                                onInteraction={updatePostStats}
+                                onThoughtsClick={() => setSelectedPost(post)}
+                            />
+                        }
+                    </motion.div>
+                ))}
+            </motion.div>
 
             <PostDetailModal
                 post={selectedPost}

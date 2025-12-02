@@ -39,7 +39,7 @@ const PostGrid = () => {
         incrementThoughts(selectedPost.id);
     };
 
-    const handleInteraction = (postId: number, type: string, value: number) => {
+    const handleInteraction = (postId, type, value) => {
         updatePostStats(postId, type, value);
     };
 

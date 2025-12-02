@@ -12,12 +12,12 @@ import { imageUrls } from "@/lib/content";
 
 export default function CategoryPage() {
     const params = useParams();
-    const category = params.category as string;
-    const [posts, setPosts] = useState<any[]>([]);
+    const category = params.category;
+    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Specific data for each category
-    const categoryData: Record<string, { title: string; description: string; icon: any; gradient: string }> = {
+    const categoryData = {
         "digital-art": {
             title: "Digital Art",
             description: "Immerse yourself in the world of pixels, vectors, and digital masterpieces.",

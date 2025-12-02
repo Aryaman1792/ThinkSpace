@@ -31,7 +31,7 @@ export default function SparkFeed() {
         "Side project Sunday! Working on something exciting. Can't wait to share it with you all. 🎨"
     ];
 
-    const [sparks, setSparks] = useState<any[]>(
+    const [sparks, setSparks] = useState(
         Array.from({ length: 200 }).map((_, i) => ({
             _id: `${i + 1}`,
             user: {
@@ -48,7 +48,7 @@ export default function SparkFeed() {
     );
     const [loading, setLoading] = useState(true);
     const [newSparkContent, setNewSparkContent] = useState("");
-    const [selectedSpark, setSelectedSpark] = useState<any>(null);
+    const [selectedSpark, setSelectedSpark] = useState(null);
 
     useEffect(() => {
         setTimeout(() => setLoading(false), 1000);
@@ -75,7 +75,7 @@ export default function SparkFeed() {
         setNewSparkContent("");
     };
 
-    const handleInteraction = (id: string, type: 'likes' | 'shares' | 'comments') => {
+    const handleInteraction = (id, type) => {
         if (type === 'comments') {
             const spark = sparks.find(s => s._id === id);
             if (spark) setSelectedSpark(spark);
@@ -90,7 +90,7 @@ export default function SparkFeed() {
         }));
     };
 
-    const handleCommentSubmit = (sparkId: string) => {
+    const handleCommentSubmit = (sparkId) => {
         setSparks(prevSparks => prevSparks.map(spark => {
             if (spark._id === sparkId) {
                 return { ...spark, comments: spark.comments + 1 };

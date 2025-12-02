@@ -10,7 +10,7 @@ import { Search, TrendingUp, Sparkles, Compass } from "lucide-react";
 import { videoUrls, imageUrls } from "@/lib/content";
 
 export default function Explore() {
-    const [trendingPosts, setTrendingPosts] = useState<any[]>(
+    const [trendingPosts, setTrendingPosts] = useState(
         Array.from({ length: 30 }).map((_, i) => ({
             _id: `${i + 1}`,
             content: `This is trending post #${i + 1}. Exploring the beauty of ${i % 2 === 0 ? 'nature' : 'technology'} and creativity. #explore #life`,
@@ -23,7 +23,7 @@ export default function Explore() {
             image: imageUrls[i % imageUrls.length]
         }))
     );
-    const [recentSparks, setRecentSparks] = useState<any[]>(
+    const [recentSparks, setRecentSparks] = useState(
         Array.from({ length: 20 }).map((_, i) => ({
             _id: `${i + 1}`,
             description: `Fresh Spark #${i + 1} - Watch this!`,
@@ -31,7 +31,7 @@ export default function Explore() {
             user: { name: `Sparker ${i + 1}` }
         }))
     );
-    const [categories, setCategories] = useState<any[]>([
+    const [categories, setCategories] = useState([
         { id: "digital-art", name: "Digital Art", image: imageUrls[0] },
         { id: "tech", name: "Technology", image: imageUrls[1] },
         { id: "design", name: "Design", image: imageUrls[2] },
@@ -53,13 +53,13 @@ export default function Explore() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/explore");
+                const res = await fetch("http://localhost:5001/api/explore");
                 if (!res.ok) throw new Error("Failed to fetch");
                 const data = await res.json();
 
                 // Robust image handling: Enforce fallbacks if API data is missing images
                 if (data.trendingPosts?.length) {
-                    setTrendingPosts(data.trendingPosts.map((post: any, i: number) => ({
+                    setTrendingPosts(data.trendingPosts.map((post, i) => ({
                         ...post,
                         image: post.image || imageUrls[i % imageUrls.length],
                         user: {
@@ -69,13 +69,13 @@ export default function Explore() {
                     })));
                 }
                 if (data.recentSparks?.length) {
-                    setRecentSparks(data.recentSparks.map((spark: any, i: number) => ({
+                    setRecentSparks(data.recentSparks.map((spark, i) => ({
                         ...spark,
                         thumbnailUrl: spark.thumbnailUrl || imageUrls[(i + 10) % imageUrls.length]
                     })));
                 }
                 if (data.categories?.length) {
-                    setCategories(data.categories.map((cat: any, i: number) => ({
+                    setCategories(data.categories.map((cat, i) => ({
                         ...cat,
                         image: cat.image || imageUrls[i % imageUrls.length]
                     })));
@@ -203,7 +203,7 @@ export default function Explore() {
                                 <h2 className="text-2xl font-bold text-slate-800">Browse Categories</h2>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {categories.map((category: any) => (
+                                {categories.map((category) => (
                                     <motion.div key={category.id} variants={item}>
                                         <Link href={`/explore/${category.id}`}>
                                             <GlassCard className="h-40 flex items-center justify-center relative overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 border-white/40">
@@ -225,7 +225,7 @@ export default function Explore() {
                                 <h2 className="text-2xl font-bold text-slate-800">Trending Now</h2>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {trendingPosts.map((post: any) => (
+                                {trendingPosts.map((post) => (
                                     <motion.div key={post._id} variants={item}>
                                         <Link href={`/explore/post/${post._id}`}>
                                             <GlassCard className="h-full hover:shadow-lg transition-all duration-300 border-white/40 cursor-pointer group">
@@ -262,7 +262,7 @@ export default function Explore() {
                                 <h2 className="text-2xl font-bold text-slate-800">Fresh Sparks</h2>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {recentSparks.map((spark: any) => (
+                                {recentSparks.map((spark) => (
                                     <motion.div key={spark._id} variants={item}>
                                         <Link href="/sparks">
                                             <div className="aspect-[9/16] rounded-2xl overflow-hidden relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-300">

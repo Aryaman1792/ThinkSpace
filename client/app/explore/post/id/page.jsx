@@ -11,11 +11,11 @@ import { imageUrls } from "@/lib/content";
 
 export default function PostPage() {
     const params = useParams();
-    const id = params.id as string;
-    const [post, setPost] = useState<any>(null);
+    const id = params.id;
+    const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [commentText, setCommentText] = useState("");
-    const [comments, setComments] = useState<any[]>([]);
+    const [comments, setComments] = useState([]);
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
 
@@ -52,7 +52,7 @@ export default function PostPage() {
         setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
     };
 
-    const handleCommentSubmit = (e: React.FormEvent) => {
+    const handleCommentSubmit = (e) => {
         e.preventDefault();
         if (!commentText.trim()) return;
 
@@ -129,7 +129,7 @@ export default function PostPage() {
                                 <h3 className="font-bold text-slate-800 mb-4">Comments</h3>
 
                                 <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2">
-                                    {comments.map((comment: any) => (
+                                    {comments.map((comment) => (
                                         <div key={comment.id} className="flex gap-3">
                                             <div className="h-8 w-8 rounded-full overflow-hidden flex-shrink-0">
                                                 <img src={comment.avatar} alt={comment.user} className="h-full w-full object-cover" />

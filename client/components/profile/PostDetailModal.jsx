@@ -4,15 +4,8 @@ import React, { useState } from "react";
 import { X, MoreHorizontal, Send } from "lucide-react";
 import InteractionBar from "@/components/ui/InteractionBar";
 
-interface PostDetailModalProps {
-    post: any;
-    isOpen: boolean;
-    onClose: () => void;
-    onCommentAdd?: () => void;
-    onInteraction?: (type: string, value: number) => void;
-}
 
-const PostDetailModal = ({ post, isOpen, onClose, onCommentAdd, onInteraction }: PostDetailModalProps) => {
+const PostDetailModal = ({ post, isOpen, onClose, onCommentAdd, onInteraction }) => {
     const [comment, setComment] = useState("");
 
     // Dummy comments

@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-export const usePostList = (initialPosts: any[]) => {
+export const usePostList = (initialPosts) => {
     const [posts, setPosts] = useState(initialPosts || []);
-    const [selectedPost, setSelectedPost] = useState<any>(null);
+    const [selectedPost, setSelectedPost] = useState(null);
 
-    const updatePostStats = (postId: number | string, type: string, value: number) => {
+    const updatePostStats = (postId, type, value) => {
         setPosts(prevPosts => prevPosts.map(p => {
             if (p.id === postId || p._id === postId) {
                 // Handle both nested stats and flat properties
@@ -27,7 +27,7 @@ export const usePostList = (initialPosts: any[]) => {
         }));
 
         if (selectedPost && (selectedPost.id === postId || selectedPost._id === postId)) {
-            setSelectedPost((prev: any) => {
+            setSelectedPost((prev) => {
                 if (prev.stats) {
                     return {
                         ...prev,
@@ -46,7 +46,7 @@ export const usePostList = (initialPosts: any[]) => {
         }
     };
 
-    const incrementThoughts = (postId: number | string) => {
+    const incrementThoughts = (postId) => {
         // Helper to increment thought count (usually from comments)
         // This is a bit complex because we need the current value, 
         // but often we just want to trigger a re-render or update from the modal.

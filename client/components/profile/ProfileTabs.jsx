@@ -4,12 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Zap, Bookmark, Grid } from "lucide-react";
 
-interface ProfileTabsProps {
-    activeTab: string;
-    setActiveTab: (tab: string) => void;
-}
 
-const ProfileTabs = ({ activeTab, setActiveTab }: ProfileTabsProps) => {
+const ProfileTabs = ({ activeTab, setActiveTab }) => {
     const tabs = [
         { id: "sparks", label: "My Sparks", icon: Zap },
         { id: "saved", label: "Saved Thoughts", icon: Bookmark },

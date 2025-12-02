@@ -1,27 +1,8 @@
 import { useState, useEffect } from "react";
 
-interface InteractionCounts {
-    spark: number;
-    dim: number;
-    thoughts: number;
-    spread: number;
-}
-
-interface InteractionActive {
-    spark: boolean;
-    dim: boolean;
-}
-
-interface UseInteractionLogicProps {
-    initialCounts: InteractionCounts;
-    onInteraction?: (type: string, value: number) => void;
-    shareUrl?: string;
-    shareTitle?: string;
-}
-
-export const useInteractionLogic = ({ initialCounts, onInteraction, shareUrl, shareTitle }: UseInteractionLogicProps) => {
+export const useInteractionLogic = ({ initialCounts, onInteraction, shareUrl, shareTitle }) => {
     const [counts, setCounts] = useState(initialCounts);
-    const [active, setActive] = useState<InteractionActive>({
+    const [active, setActive] = useState({
         spark: false,
         dim: false,
     });
@@ -36,7 +17,7 @@ export const useInteractionLogic = ({ initialCounts, onInteraction, shareUrl, sh
         }));
     }, [initialCounts.thoughts]);
 
-    const handleInteraction = async (type: string, onThoughtsClick?: () => void) => {
+    const handleInteraction = async (type, onThoughtsClick) => {
         if (type === "thoughts") {
             if (onThoughtsClick) onThoughtsClick();
             return;
@@ -70,10 +51,8 @@ export const useInteractionLogic = ({ initialCounts, onInteraction, shareUrl, sh
         let newActive = { ...active };
         let newCounts = { ...counts };
 
-        // @ts-ignore
         const isNowActive = !active[type];
 
-        // @ts-ignore
         newActive[type] = isNowActive;
 
         if (type === "spark") {
@@ -94,7 +73,7 @@ export const useInteractionLogic = ({ initialCounts, onInteraction, shareUrl, sh
         setCounts(newCounts);
 
         if (onInteraction) {
-            onInteraction(type, newCounts[type as keyof InteractionCounts]);
+            onInteraction(type, newCounts[type]);
 
             if (type === "spark" && isNowActive && active.dim) {
                 onInteraction("dim", newCounts.dim);

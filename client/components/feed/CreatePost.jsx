@@ -4,16 +4,12 @@ import React, { useState } from 'react';
 import { Send, Image as ImageIcon, Loader2 } from 'lucide-react';
 import GlassCard from '@/components/ui/GlassCard';
 
-interface CreatePostProps {
-    onPostCreated: (post: any) => void;
-}
-
-export default function CreatePost({ onPostCreated }: CreatePostProps) {
+export default function CreatePost({ onPostCreated }) {
     const [content, setContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!content.trim()) return;
 
@@ -21,7 +17,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
         try {
             // TODO: Get real user ID. For now, we'll fetch a random user or hardcode.
             // We'll fetch the first user from the API to use as the author.
-            const usersRes = await fetch('http://localhost:5000/api/users'); // We might need to create this route or use existing
+            const usersRes = await fetch('http://localhost:5001/api/users'); // We might need to create this route or use existing
             // Wait, we don't have a specific users route listed in the file list earlier, let's check.
             // server/src/routes/userRoutes.js exists.
 
@@ -35,7 +31,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
             // So we really need a real ID.
 
             // Temporary solution: Fetch all posts, take the user ID from the first post.
-            const postsRes = await fetch('http://localhost:5000/api/posts');
+            const postsRes = await fetch('http://localhost:5001/api/posts');
             const postsData = await postsRes.json();
             const userId = postsData.posts[0]?.user?._id;
 
@@ -43,7 +39,7 @@ export default function CreatePost({ onPostCreated }: CreatePostProps) {
                 throw new Error('No user found to post as');
             }
 
-            const res = await fetch('http://localhost:5000/api/posts/create', {
+            const res = await fetch('http://localhost:5001/api/posts/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

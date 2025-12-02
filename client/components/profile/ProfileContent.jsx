@@ -7,16 +7,7 @@ import { Zap, Users, Settings } from "lucide-react";
 import ProfileTabs from "./ProfileTabs";
 import PostGrid from "./PostGrid";
 
-interface ProfileContentProps {
-    user: {
-        fullName: string | null;
-        username: string | null;
-        imageUrl: string;
-        firstName: string | null;
-    };
-}
-
-const ProfileContent = ({ user }: ProfileContentProps) => {
+const ProfileContent = ({ user }) => {
     const [activeTab, setActiveTab] = useState("sparks");
 
     return (

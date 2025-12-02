@@ -2,23 +2,9 @@
 
 import React from "react";
 import { Zap, CloudRain, Brain, CornerUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useInteractionLogic } from "@/hooks/useInteractionLogic";
-
-interface InteractionBarProps {
-    initialCounts: {
-        spark: number;
-        dim: number;
-        thoughts: number;
-        spread: number;
-    };
-    onInteraction?: (type: string, value: number) => void;
-    onThoughtsClick?: () => void;
-    className?: string;
-    variant?: "default" | "minimal";
-    shareUrl?: string;
-    shareTitle?: string;
-}
 
 const InteractionBar = ({
     initialCounts,
@@ -28,7 +14,7 @@ const InteractionBar = ({
     variant = "default",
     shareUrl,
     shareTitle
-}: InteractionBarProps) => {
+}) => {
 
     const { counts, active, handleInteraction } = useInteractionLogic({
         initialCounts,
@@ -76,13 +62,11 @@ const InteractionBar = ({
     return (
         <div className={cn("flex items-center justify-between w-full", className)}>
             {buttons.map((btn) => {
-                // @ts-ignore
                 const isActive = active[btn.id];
-                // @ts-ignore
                 const count = counts[btn.id];
 
                 return (
-                    <button
+                    <motion.button
                         key={btn.id}
                         onClick={(e) => {
                             e.stopPropagation();
@@ -92,6 +76,8 @@ const InteractionBar = ({
                             "flex items-center gap-1.5 transition-colors duration-200 group p-1.5 rounded-full",
                             btn.bgHover
                         )}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                     >
                         <btn.icon
                             size={variant === "minimal" ? 18 : 20}
@@ -106,7 +92,7 @@ const InteractionBar = ({
                         )}>
                             {count || 0}
                         </span>
-                    </button>
+                    </motion.button>
                 );
             })}
         </div>

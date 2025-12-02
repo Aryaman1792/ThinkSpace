@@ -5,7 +5,7 @@ import { UserButton } from "@clerk/nextjs";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+const MainLayout = ({ children }) => {
     return (
         <div className="min-h-screen bg-[#F0F9FF] relative">
             <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">

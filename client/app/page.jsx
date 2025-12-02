@@ -1,6 +1,7 @@
 import React from "react";
 import MainLayout from "@/components/layout/MainLayout";
 import Feed from "@/components/feed/Feed";
+import HomeHeader from "@/components/feed/HomeHeader";
 import { getPosts } from "@/actions/getPosts";
 
 export default async function Home() {
@@ -8,10 +9,7 @@ export default async function Home() {
 
   return (
     <MainLayout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Home Feed</h1>
-        <p className="text-slate-500">Your daily dose of inspiration.</p>
-      </div>
+      <HomeHeader />
       <Feed initialPosts={posts} />
     </MainLayout>
   );
