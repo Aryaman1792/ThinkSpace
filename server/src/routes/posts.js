@@ -14,6 +14,17 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Get single post by ID
+router.get('/:id', async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id).populate('user');
+        if (!post) return res.status(404).json({ message: 'Post not found' });
+        res.json(post);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Create a post
 router.post('/create', async (req, res) => {
     const { content, image, userId } = req.body;
